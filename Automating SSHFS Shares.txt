@@ -1,0 +1,81 @@
+Automating SSHFS Shares for Seamless File Access
+Published on August 24, 2025
+
+Tired of Manual Mounting? There's a Better Way.
+If you're a Linux user who works across multiple machines, you know the pain of constantly having to log in and copy files. Using SSHFS is a powerful way to mount remote directories as if they were local, but doing it manually every time you reboot or reconnect is a chore. This guide, based on my own trial-and-error, provides a simple, robust solution to automate the process once and for all.
+
+The Prerequisites: Setting the Stage for Success
+Before you write a single line of script, you need to ensure your computers are set up to talk to each other seamlessly. This involves two non-negotiable steps:
+
+1. Configure Your `hosts` File
+The `hosts` file is your computer's local phonebook for network addresses. By giving your remote machine a friendly name, you can refer to it by that name instead of its often-changing IP address.
+
+Open your `/etc/hosts` file with `sudo` and a text editor.
+
+sudo micro /etc/hosts
+Add a line to the end of the file that maps your remote machine's IP address to a hostname of your choice. I'll use `alsdesk` as an example.
+
+192.168.1.100 alsdesk
+2. Set Up Passwordless SSH Login
+This is the core of the solution. `sshfs` uses `ssh` in the background, so you need to configure a trusted connection that doesn't require a password. The easiest way to do this is with the `ssh-copy-id` utility.
+
+Run the following command in your terminal, replacing `al@alsdesk` with your username and the hostname you chose above.
+
+ssh-copy-id al@alsdesk
+You will be prompted for your remote machine's password one last time. After that, your public key is copied, and you can connect to your remote machine password-free.
+
+The `sshfs` Mounting Script
+With the prerequisites handled, the mounting script is straightforward. It's clean, repeatable, and can be run manually or set up to run on system startup.
+
+#!/usr/bin/env bash
+
+# This script mounts several directories from a remote computer (alsdesk)
+# using sshfs, ensuring seamless file access.
+
+# Check if the directories are already mounted to avoid errors
+if mountpoint -q /home/al/als; then
+    echo "Fileshare already mounted. Skipping."
+else
+    # Mount the main home directory share
+    sshfs -o allow_other,IdentityFile=.ssh/id_rsa,default_permissions,uid=1000,gid=1000 al@alsdesk:/home/al/ /home/al/als
+    echo "Main home directory mounted successfully."
+fi
+
+# Mount the /var/www directory
+if mountpoint -q /home/al/www; then
+    echo "www share already mounted. Skipping."
+else
+    sshfs -o allow_other,IdentityFile=.ssh/id_rsa,default_permissions,uid=1000,gid=1000 al@alsdesk://var/www /home/al/www
+    echo "www share mounted successfully."
+fi
+
+# Mount the Media directory
+if mountpoint -q /home/al/Media; then
+    echo "Media share already mounted. Skipping."
+else
+    sshfs -o allow_other,IdentityFile=.ssh/id_rsa,default_permissions,uid=1000,gid=1000 al@alsdesk:/home/al/Media /home/al/Media
+    echo "Media share mounted successfully."
+fi
+
+# Mount the Movies directory
+if mountpoint -q /home/al/Movies; then
+    echo "Movies share already mounted. Skipping."
+else
+    sshfs -o allow_other,IdentityFile=.ssh/id_rsa,default_permissions,uid=1000,gid=1000 al@alsdesk:/home/al/Movies /home/al/Movies
+    echo "Movies share mounted successfully."
+fi
+
+# Mount the Videos directory
+if mountpoint -q /home/al/Videos; then
+    echo "Videos share already mounted. Skipping."
+else
+    sshfs -o allow_other,IdentityFile=.ssh/id_rsa,default_permissions,uid=1000,gid=1000 al@alsdesk:/home/al/Videos /home/al/Videos
+    echo "Videos share mounted successfully."
+fi
+You can save this script to a file (e.g., `~/scripts/mount_shares.sh`), make it executable with `chmod +x`, and run it to mount all your shares at once.
+
+Why This is Better than `keychain`
+While utilities like `keychain` are useful for managing your SSH agent, a simple `sshfs` script addresses the root problem directly. By setting up a passwordless key and mounting the shares with `sshfs`, you eliminate the need to interact with a key agent at all, resulting in a cleaner, more direct, and more reliable solution for your specific use case.
+
+About the Author
+I'm not a Silicon Valley developer. I'm a lifelong tinkerer and a system administrator who has been building, breaking, and fixing computer systems since the days of the Altair 8800. My experience is grounded in decades of hands-on work, from managing radio repair shops without a formal degree to architecting my own remote-access homelab. I build tools to solve my own problems, with a focus on simplicity, control, and a deep respect for the user.
