@@ -1,0 +1,12 @@
+The End of the Distro Hop: A Confident Return to Debian 13
+After years of searching for a truly stable Linux host, I have finally found my way back home. My recent migration to Debian 13 was not just a successful install; it was a testament to the enduring principles of an operating system that has served as the backbone for countless other distributions. What was most surprising, however, was just how easy it was. In under two hours, I had a fully functional, cutting-edge system ready for production.
+
+My journey with Debian began over 30 years ago. I fell in love with a Linux that just worked—it was dependable, predictable, and the deb package system ensured that installations and updates were always reliable. I eventually switched as the landscape changed, trying a variety of other distributions, including so-called "rolling releases." These were often a disaster. A stable host with sub-domains running everything from Docker to Gunicorn and using the robust Python3 language simply cannot afford to have a crucial update crash the entire system. Stability isn't just a preference; it's a requirement. I don't want "modern"; I want stable.
+
+And with Debian 13, I got exactly what I needed. It's a misconception that stability means being left behind. Debian 13 is running the current kernel, 6.12.41+deb13-amd64, and Cinnamon 6.4.10, which provide a modern, snappy, and secure experience without compromising on the reliability that Debian is famous for. This is a system built to run, not to fail.
+
+My host machine is an older MSI/AMD system, a testament to how Linux continues to be the ideal choice for maximizing the life of your hardware. This installation was seamless, and the hardware worked perfectly out of the box, something that can't be said for every OS I've used. All my services installed smoothly, and the system is ready for work.
+
+I'm happy to be back on the OS that made me a Linux user so many years ago. It’s an honor to once again be a faithful follower of a Debian-based distro, and Debian 13 is the best I've seen in years. If you’re looking for a rock-solid foundation for your projects, I highly recommend giving it a try.
+
+You can learn more about the latest stable release here: https://www.debian.org/releases/stable/
